@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\des32\Desktop\python2\fb8\fenv"
+VIRTUAL_ENV="C:\Users\des32\Desktop\PYTHON\fb8\fenv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

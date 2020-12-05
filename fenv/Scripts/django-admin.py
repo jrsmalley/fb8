@@ -1,4 +1,4 @@
-#!c:\users\des32\desktop\python2\fb8\fenv\scripts\python.exe
+#!c:\users\des32\desktop\python\fb8\fenv\scripts\python.exe
 # When the django-admin.py deprecation ends, remove this script.
 import warnings
 
