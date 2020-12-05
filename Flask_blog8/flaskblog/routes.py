@@ -7,6 +7,9 @@ from flaskblog.forms import RegistrationForm, LoginForm, UpdateAccountForm, Post
 from flaskblog.models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
 
+import csv
+import pprint as pp
+
 #turns csv into a list of dictionaries (one for each row)
 with open('items.csv') as csvfile:
     reader = csv.DictReader(csvfile)
