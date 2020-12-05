@@ -11,7 +11,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 with open('items.csv') as csvfile:
     reader = csv.DictReader(csvfile)
     items = [row for row in reader]
-
+print(items[1])
 
 @app.route("/")
 @app.route("/home")
