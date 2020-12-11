@@ -26,6 +26,13 @@ def home():
 @app.route("/about")
 def about():
     return render_template('about.html', title='About')
+    
+    
+
+@app.route("/bid")
+def bid():
+    posts = Post.query.all()
+    return render_template('bid.html', posts=posts)   
 
 
 @app.route("/register", methods=['GET', 'POST'])
