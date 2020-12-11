@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
+
     {% for post in posts %}
         <article class="media content-section">
           <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
@@ -13,7 +14,9 @@
 			<a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('bid') }}">Bid Now</a>
 			
           </div>
-        </article>
+        </article>    
+    {% endfor %}        
+
 
     <div class="container">
     <h1>Active Auctions:</h1>
@@ -50,5 +53,4 @@
   </div>
 
 
-    {% endfor %}
-{% endblock content %}
+    {% endblock content %}
