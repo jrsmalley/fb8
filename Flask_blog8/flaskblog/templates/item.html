@@ -1,0 +1,19 @@
+
+{% extends "layout.html" %}
+
+
+{% block content %}
+
+
+<div class="media">
+	<img class='align-self-start mr-3' src='/static/pics/{{item.url}}' width=300pt>
+	<div class="media-body">
+		<h5 class="mt-0">{{item.name}}</h5>
+		<p>{{item.description}}</p>
+		<p>Top Bidder: {{item.bidder}}</p>
+		<p>Top Bid: {{item.bid}}</p>
+	</div>
+</div>
+
+
+{% endblock %}
