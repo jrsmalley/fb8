@@ -12,5 +12,41 @@
             <p class="article-content">{{ post.content }}</p>
           </div>
         </article>
+
+    <div class="container">
+    <h1>Active Auctions:</h1>
+
+      {% set path = "/scoutbay/" %}
+  
+      {% for item_number in range(items|count) %}
+
+      {% set url = path ~ item_number %}
+      {% set item= items[item_number] %}
+
+<!--This is set of Media content bits   -->
+
+          <article class="media content-section">
+          <img class="mr-3" src='/static/pics/{{item.url}}' width=200pt alt="Generic placeholder image">  
+            <div class="media-body"> 
+              <div class="article-metadata">
+                <a class="mr-2" href="{{ url }}">{{ item.bidder }}</a>
+                <small class="text-muted">
+                is currently top bidder with a bid of {{ item.bid }} scout bucks!</small>
+              </div>
+              <h2><a class="article-title" href="{{ url }}">{{ item.name }}</a></h2>
+              <p class="article-content">{{ item.description }}</p>
+              <div class="article-metadata">
+                <a class="mr-2" href="{{ url }}">This auction</a>
+                <small class="text-muted">
+                ends at {{ item.expiration|string}} pm!</small>
+              </div>
+            </div>
+          </article>
+
+      {% endfor %}
+
+  </div>
+
+
     {% endfor %}
 {% endblock content %}

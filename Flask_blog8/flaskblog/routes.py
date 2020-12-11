@@ -20,7 +20,14 @@ print(items[1])
 @app.route("/home")
 def home():
     posts = Post.query.all()
-    return render_template('home.html', posts=posts)
+    return render_template('home.html', posts=posts, items=items)
+
+
+@app.route('/scoutbay/<item_num>')
+def item_page(item_num):
+    item=items[int(item_num)]
+    #print(item)
+    return render_template('item.html', item=item)#could send each key as a variable by using item**
 
 
 @app.route("/about")
