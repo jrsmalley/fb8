@@ -60,3 +60,10 @@ class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     content = TextAreaField('Content', validators=[DataRequired()])
     submit = SubmitField('Post')
+
+class BidForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    content = TextAreaField('Content', validators=[DataRequired()])
+    bidder = StringField('Bidder', validators=[DataRequired()])
+    bid = StringField('Bid', validators=[DataRequired()])
+    submit = SubmitField('Submit Bid!')
