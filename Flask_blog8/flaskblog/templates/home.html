@@ -44,7 +44,12 @@
                 <a class="mr-2" href="{{ url }}">This auction</a>
                 <small class="text-muted">
                 ends at {{ item.expiration|string}} pm!</small>
-				        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('item_page', item_num=item_number)}}">Bid Now</a>
+
+				        
+              <!--<a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('item_page', item_num=item_number)}}">Bid Now</a> -->
+               <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('bid', item_id=item_number)}}">Bid Now</a> 
+               
+
               </div>
             </div>
           </article>

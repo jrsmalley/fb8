@@ -3,43 +3,21 @@ import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort
 from flaskblog import app, db, bcrypt
-from flaskblog.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm, BidForm
+from flaskblog.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm
 from flaskblog.models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
-
-import csv
-import pprint as pp
-
-#turns csv into a list of dictionaries (one for each row)
-with open('items.csv') as csvfile:
-    reader = csv.DictReader(csvfile)
-    items = [row for row in reader]
-print(items[1])
-
-
-
 
 
 @app.route("/")
 @app.route("/home")
 def home():
     posts = Post.query.all()
-    return render_template('home.html', posts=posts, items=items)
-
-
-@app.route('/scoutbay/<item_num>')
-def item_page(item_num):
-    item=items[int(item_num)]
-    #print(item)
-    return render_template('item.html', item=item)#could send each key as a variable by using item**
+    return render_template('home.html', posts=posts)
 
 
 @app.route("/about")
 def about():
     return render_template('about.html', title='About')
-    
-    
- 
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -113,24 +91,6 @@ def account():
     return render_template('account.html', title='Account',
                            image_file=image_file, form=form)
 
-@app.route("/bid/<int:item_id>", methods=['GET', 'POST'])
-def bid(item_id):
-    item=items[item_id]
-    print(item['name'])
-    bid_amt=int(item['bid'])
-    form = BidForm()
-    if form.validate_on_submit():
-        print(f"the current high bid is {bid_amt}")
-        print(f"You bid: {form.bid.data}")
-        if int(form.bid.data) > bid_amt:
-            print("****High Bid!!!!****")
-
-        print(form.bidder.data)
-        print(form.bid.data)
-        flash('Your bid has been recorded!', 'success')
-        return redirect(url_for('home'))
-    return render_template('bid.html', title='New Post',
-                           form=form, legend='New Bid')    
 
 @app.route("/post/new", methods=['GET', 'POST'])
 @login_required
