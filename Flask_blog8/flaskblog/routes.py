@@ -19,17 +19,35 @@ print(items[1])
 '''
 
 with open("items.csv", "r") as fp:
-    reader = csv.DictReader(fp, skipinitialspace=True)
-    items = [row for row in reader]
-    header = reader.fieldnames 
-    pp.pprint(items)
+    item_reader = csv.DictReader(fp, skipinitialspace=True)
+    items = [row for row in item_reader]
+    item_header = item_reader.fieldnames 
 
-def update_items(items, header=header):
+with open("ledger.csv", "r") as fp:
+    ledger_reader = csv.DictReader(fp, skipinitialspace=True)
+    scouts = [row for row in ledger_reader]
+    ledger_header = ledger_reader.fieldnames 
+
+names=[scout['codename'] for scout in scouts]
+
+
+def update_items(items, header=item_header):
     with open("items.csv", "w") as fp:
         writer = csv.DictWriter(fp, header)
         writer.writeheader()
         for row in items:
             writer.writerow(row)
+
+def update_ledger(ledger, header=ledger_header):
+    with open("ledger.csv", "w") as fp:
+        writer = csv.DictWriter(fp, header)
+        writer.writeheader()
+        for row in ledger:
+            writer.writerow(row)
+
+def name_check(name, names=names):
+    return name.lower() in names            
+
 
 
 @app.route("/")
@@ -126,13 +144,25 @@ def account():
 @app.route("/bid/<int:item_id>", methods=['GET', 'POST'])
 def bid(item_id):
     item=items[item_id]
-    print(item['name'])
     high_bidder=item['bidder']
     bid_amt=int(item['bid'])
+
     form = BidForm()
     if form.validate_on_submit():
         print(f"the current high bid is {bid_amt}")
         print(f"You bid: {form.bid.data}")
+        if form.bidder.data not in names:
+            flash(f'Be sure you spell the name correctly you entered {form.bidder.data} but you need to enter a name on the list: {names}', 'danger')
+            return redirect(url_for('bid', item_id=item_id))
+        codename=form.bidder.data
+        code_index=names.index(codename)
+        scout=scouts[code_index]
+        bucks=int(scout['bucks'])
+
+        if int(form.bid.data) > bucks:
+            flash(f"Sorry, you only have {bucks} bucks--not enough to make that bid.", 'danger')
+            return redirect(url_for('bid'))
+
         if int(form.bid.data) > bid_amt:
             flash('Your bid has been recorded. You are the highest bidder!', 'success')
             items[item_id]['bid']=form.bid.data
@@ -143,7 +173,7 @@ def bid(item_id):
             return redirect(url_for('bid', item_id=item_id))
         return redirect(url_for('home'))
     return render_template('bid.html', title='New Post',
-                           form=form, legend='New Bid')    
+                           form=form, legend='New Bid', item=item)    
 
 @app.route("/post/new", methods=['GET', 'POST'])
 @login_required
