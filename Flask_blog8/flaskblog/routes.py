@@ -11,13 +11,25 @@ import csv
 import pprint as pp
 
 #turns csv into a list of dictionaries (one for each row)
+'''
 with open('items.csv') as csvfile:
     reader = csv.DictReader(csvfile)
     items = [row for row in reader]
 print(items[1])
+'''
 
+with open("items.csv", "r") as fp:
+    reader = csv.DictReader(fp, skipinitialspace=True)
+    items = [row for row in reader]
+    header = reader.fieldnames 
+    pp.pprint(items)
 
-
+def update_items(items, header=header):
+    with open("items.csv", "w") as fp:
+        writer = csv.DictWriter(fp, header)
+        writer.writeheader()
+        for row in items:
+            writer.writerow(row)
 
 
 @app.route("/")
@@ -37,8 +49,6 @@ def item_page(item_num):
 @app.route("/about")
 def about():
     return render_template('about.html', title='About')
-    
-    
  
 
 
@@ -117,17 +127,20 @@ def account():
 def bid(item_id):
     item=items[item_id]
     print(item['name'])
+    high_bidder=item['bidder']
     bid_amt=int(item['bid'])
     form = BidForm()
     if form.validate_on_submit():
         print(f"the current high bid is {bid_amt}")
         print(f"You bid: {form.bid.data}")
         if int(form.bid.data) > bid_amt:
-            print("****High Bid!!!!****")
-
-        print(form.bidder.data)
-        print(form.bid.data)
-        flash('Your bid has been recorded!', 'success')
+            flash('Your bid has been recorded. You are the highest bidder!', 'success')
+            items[item_id]['bid']=form.bid.data
+            items[item_id]['bidder']=form.bidder.data
+            update_items(items)
+        else:
+            flash(f'Your bid is too low. You must bid higher than {bid_amt} to beat {high_bidder}', 'danger')
+            return redirect(url_for('bid', item_id=item_id))
         return redirect(url_for('home'))
     return render_template('bid.html', title='New Post',
                            form=form, legend='New Bid')    
