@@ -3,71 +3,21 @@ import secrets
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort
 from flaskblog import app, db, bcrypt
-from flaskblog.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm, BidForm
+from flaskblog.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm
 from flaskblog.models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
-
-import csv
-import pprint as pp
-
-#turns csv into a list of dictionaries (one for each row)
-'''
-with open('items.csv') as csvfile:
-    reader = csv.DictReader(csvfile)
-    items = [row for row in reader]
-print(items[1])
-'''
-
-with open("items.csv", "r") as fp:
-    item_reader = csv.DictReader(fp, skipinitialspace=True)
-    items = [row for row in item_reader]
-    item_header = item_reader.fieldnames 
-
-with open("ledger.csv", "r") as fp:
-    ledger_reader = csv.DictReader(fp, skipinitialspace=True)
-    scouts = [row for row in ledger_reader]
-    ledger_header = ledger_reader.fieldnames 
-
-names=[scout['codename'] for scout in scouts]
-
-
-def update_items(items, header=item_header):
-    with open("items.csv", "w") as fp:
-        writer = csv.DictWriter(fp, header)
-        writer.writeheader()
-        for row in items:
-            writer.writerow(row)
-
-def update_ledger(ledger, header=ledger_header):
-    with open("ledger.csv", "w") as fp:
-        writer = csv.DictWriter(fp, header)
-        writer.writeheader()
-        for row in ledger:
-            writer.writerow(row)
-
-def name_check(name, names=names):
-    return name.lower() in names            
-
 
 
 @app.route("/")
 @app.route("/home")
 def home():
     posts = Post.query.all()
-    return render_template('home.html', posts=posts, items=items)
-
-
-@app.route('/scoutbay/<item_num>')
-def item_page(item_num):
-    item=items[int(item_num)]
-    #print(item)
-    return render_template('item.html', item=item)#could send each key as a variable by using item**
+    return render_template('home.html', posts=posts)
 
 
 @app.route("/about")
 def about():
     return render_template('about.html', title='About')
- 
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -141,39 +91,6 @@ def account():
     return render_template('account.html', title='Account',
                            image_file=image_file, form=form)
 
-@app.route("/bid/<int:item_id>", methods=['GET', 'POST'])
-def bid(item_id):
-    item=items[item_id]
-    high_bidder=item['bidder']
-    bid_amt=int(item['bid'])
-
-    form = BidForm()
-    if form.validate_on_submit():
-        print(f"the current high bid is {bid_amt}")
-        print(f"You bid: {form.bid.data}")
-        if form.bidder.data not in names:
-            flash(f'Be sure you spell the name correctly you entered {form.bidder.data} but you need to enter a name on the list: {names}', 'danger')
-            return redirect(url_for('bid', item_id=item_id))
-        codename=form.bidder.data
-        code_index=names.index(codename)
-        scout=scouts[code_index]
-        bucks=int(scout['bucks'])
-
-        if int(form.bid.data) > bucks:
-            flash(f"Sorry, you only have {bucks} bucks--not enough to make that bid.", 'danger')
-            return redirect(url_for('bid'))
-
-        if int(form.bid.data) > bid_amt:
-            flash('Your bid has been recorded. You are the highest bidder!', 'success')
-            items[item_id]['bid']=form.bid.data
-            items[item_id]['bidder']=form.bidder.data
-            update_items(items)
-        else:
-            flash(f'Your bid is too low. You must bid higher than {bid_amt} to beat {high_bidder}', 'danger')
-            return redirect(url_for('bid', item_id=item_id))
-        return redirect(url_for('home'))
-    return render_template('bid.html', title='New Post',
-                           form=form, legend='New Bid', item=item)    
 
 @app.route("/post/new", methods=['GET', 'POST'])
 @login_required

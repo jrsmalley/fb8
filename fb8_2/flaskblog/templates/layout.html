@@ -20,7 +20,7 @@
     <header class="site-header">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
-          <a class="navbar-brand mr-4" href="/"><img src="/static/pics/scoutbay.gif" width = 100pt></a>
+          <a class="navbar-brand mr-4" href="/">Flask Blog</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -32,14 +32,12 @@
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
               {% if current_user.is_authenticated %}
-                <a class="nav-item nav-link" href="{{ url_for('new_post') }}">New Bid</a>
+                <a class="nav-item nav-link" href="{{ url_for('new_post') }}">New Post</a>
                 <a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a>
                 <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
               {% else %}
-<!--                 <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
+                <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
                 <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
- -->
-              
               {% endif %}
             </div>
           </div>
@@ -62,15 +60,14 @@
         </div>
         <div class="col-md-4">
           <div class="content-section">
-            <h3>Scoutbay Info</h3>
-            <p class='text-muted'>RULES
-              <ol class="list-group">
-                <li class="list-group-item list-group-item-light">1) Use only the codename assigned to you.</li>
-                <li class="list-group-item list-group-item-light">2) Be sure to spell your codename. correctly when bidding</li>
-                <li class="list-group-item list-group-item-light">3) If you bid on multiple items, be sure you have enough scoutbucks to cover all of your bids should you win.  Otherwise, you may have your auction win voided. </li>
-                <li class="list-group-item list-group-item-light">4) Email Jeffrey with any questions (your parents can help you find the email). </li>
-
-              </ol>
+            <h3>Our Sidebar</h3>
+            <p class='text-muted'>You can put any information here you'd like.
+              <ul class="list-group">
+                <li class="list-group-item list-group-item-light">Latest Posts</li>
+                <li class="list-group-item list-group-item-light">Announcements</li>
+                <li class="list-group-item list-group-item-light">Calendars</li>
+                <li class="list-group-item list-group-item-light">etc</li>
+              </ul>
             </p>
           </div>
         </div>
